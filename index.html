@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perbandingan Algoritma Sorting</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Perbandingan Algoritma Sorting</h1>
+      <p>Masukkan ukuran data untuk pengujian (contoh: 10, 100, 1000, 5000, 10000):</p>
+    </header>
+
+    <!-- Bar Input Editable -->
+    <textarea id="sizesInput" placeholder="10, 100, 1000, 5000, 10000"></textarea>
+    <button onclick="generateAndDisplayGraph()">Lihat Grafik</button>
+
+    <!-- Informasi Kelas Kompleksitas -->
+    <div id="complexity-info">
+      <h2>Kelas Kompleksitas</h2>
+      <p><b>QuickSort</b>: Rata-rata: <code>O(n log n)</code>, Terburuk: <code>O(n²)</code></p>
+      <p><b>MergeSort</b>: Rata-rata dan semua kasus: <code>O(n log n)</code></p>
+    </div>
+
+    <!-- Chart untuk Hasil Pengujian -->
+    <div id="chart-container">
+      <canvas id="chart"></canvas>
+    </div>
+  </div>
+  <footer>
+    <p>&copy; 2024 Analisis Algoritma</p>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
