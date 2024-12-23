@@ -1,31 +1,31 @@
-// QuickSort implementation
-function quicksort(arr) {
-  if (arr.length <= 1) {
-    return arr;
-  }
-  const pivot = arr[Math.floor(arr.length / 2)];
-  const left = arr.filter(x => x < pivot);
-  const middle = arr.filter(x => x === pivot);
-  const right = arr.filter(x => x > pivot);
-  return [...quicksort(left), ...middle, ...quicksort(right)];
+// QuickSort Implementation
+function quicksortProduk(arr) {
+  if (arr.length <= 1) return arr;
+
+  const pivot = arr[Math.floor(arr.length / 2)].harga;
+  const left = arr.filter(item => item.harga < pivot);
+  const middle = arr.filter(item => item.harga === pivot);
+  const right = arr.filter(item => item.harga > pivot);
+
+  return [...quicksortProduk(left), ...middle, ...quicksortProduk(right)];
 }
 
-// MergeSort implementation
-function mergesort(arr) {
-  if (arr.length <= 1) {
-    return arr;
-  }
+// MergeSort Implementation
+function mergesortProduk(arr) {
+  if (arr.length <= 1) return arr;
+
   const middle = Math.floor(arr.length / 2);
-  const left = mergesort(arr.slice(0, middle));
-  const right = mergesort(arr.slice(middle));
-  return merge(left, right);
+  const left = mergesortProduk(arr.slice(0, middle));
+  const right = mergesortProduk(arr.slice(middle));
+
+  return mergeProduk(left, right);
 }
 
-function merge(left, right) {
-  let result = [];
-  let i = 0, j = 0;
+function mergeProduk(left, right) {
+  let result = [], i = 0, j = 0;
+
   while (i < left.length && j < right.length) {
-    if (left[i] < right[j]) {
+    if (left[i].harga < right[j].harga) {
       result.push(left[i]);
       i++;
     } else {
@@ -33,96 +33,57 @@ function merge(left, right) {
       j++;
     }
   }
+
   return [...result, ...left.slice(i), ...right.slice(j)];
 }
 
-// Function to measure execution time
-function measureTime(algorithm, data) {
+// Measure Execution Time
+function ukurWaktu(algorithm, data) {
   const start = performance.now();
-  algorithm(data.slice()); // Clone the array to avoid modifying the original data
+  const hasil = algorithm(data);
   const end = performance.now();
-  return end - start; // Time in milliseconds
+  return { waktu: end - start, hasil };
 }
 
-// Generate data based on type
-function generateData(size, type) {
-  const data = Array.from({ length: size }, () => Math.floor(Math.random() * 10000));
-  if (type === "sorted") return data.sort((a, b) => a - b);
-  if (type === "reversed") return data.sort((a, b) => b - a);
-  return data;
-}
+// Process Data and Generate Results
+function prosesData() {
+  const input = document.getElementById("produkInput").value.trim();
 
-// Generate and display graph
-function generateAndDisplayGraph() {
-  const sizesInput = document.getElementById("sizesInput").value;
+  // Split input berdasarkan koma dan proses setiap pasangan nama-harga
+  const produk = input.split(",").map(item => {
+    const parts = item.trim().split(" ");
+    const harga = parseInt(parts.pop()); // Ambil elemen terakhir sebagai harga
+    const nama = parts.join(" "); // Gabungkan sisanya sebagai nama
+    return { nama: nama.trim(), harga: harga };
+  });
 
-  // Validasi input: hanya terima angka positif dan non-nol
-  const sizes = sizesInput.split(",")
-    .map(Number)
-    .filter(size => size > 0 && size <= 100000 && !isNaN(size)); // Abaikan nilai yang tidak valid
-
-  if (sizes.length === 0) {
-    alert("Input ukuran data tidak valid! Harus berupa bilangan bulat positif dan <= 100000.");
+  // Periksa validasi harga
+  if (produk.some(item => isNaN(item.harga) || item.harga <= 0)) {
+    alert("Format salah! Pastikan harga berupa angka positif. Contoh: 'Roti 5000, Air Mineral 2500'");
     return;
   }
 
-  const quicksortTimes = { random: [], sorted: [], reversed: [] };
-  const mergesortTimes = { random: [], sorted: [], reversed: [] };
+  // QuickSort dan MergeSort
+  const quicksortHasil = ukurWaktu(quicksortProduk, [...produk]);
+  const mergesortHasil = ukurWaktu(mergesortProduk, [...produk]);
 
-  sizes.forEach(size => {
-    ["random", "sorted", "reversed"].forEach(type => {
-      const data = generateData(size, type);
-
-      quicksortTimes[type].push(measureTime(quicksort, data));
-      mergesortTimes[type].push(measureTime(mergesort, data));
-    });
-  });
-
-  // Reset the canvas for the new chart
-  const chartContainer = document.getElementById("chart-container");
-  chartContainer.innerHTML = '<canvas id="chart"></canvas>';
-
-  // Display the chart
+  // Grafik perbandingan waktu
   const ctx = document.getElementById("chart").getContext("2d");
   new Chart(ctx, {
-    type: "line",
+    type: "line", // Line chart untuk tren
     data: {
-      labels: sizes,
+      labels: produk.map(p => p.nama), // Nama produk pada sumbu X
       datasets: [
         {
-          label: "QuickSort (acak)",
-          data: quicksortTimes.random,
+          label: "QuickSort",
+          data: produk.map(p => p.harga),
           borderColor: "blue",
           fill: false,
         },
         {
-          label: "MergeSort (acak)",
-          data: mergesortTimes.random,
+          label: "MergeSort",
+          data: produk.map(p => p.harga),
           borderColor: "orange",
-          fill: false,
-        },
-        {
-          label: "QuickSort (terurut)",
-          data: quicksortTimes.sorted,
-          borderColor: "green",
-          fill: false,
-        },
-        {
-          label: "MergeSort (terurut)",
-          data: mergesortTimes.sorted,
-          borderColor: "red",
-          fill: false,
-        },
-        {
-          label: "QuickSort (terbalik)",
-          data: quicksortTimes.reversed,
-          borderColor: "purple",
-          fill: false,
-        },
-        {
-          label: "MergeSort (terbalik)",
-          data: mergesortTimes.reversed,
-          borderColor: "brown",
           fill: false,
         },
       ],
@@ -131,13 +92,31 @@ function generateAndDisplayGraph() {
       responsive: true,
       plugins: {
         legend: {
-          position: "top",
-        },
-        title: {
           display: true,
-          text: "Perbandingan Kinerja QuickSort vs MergeSort",
+        },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: "Harga Produk",
+          },
         },
       },
     },
   });
+
+  // Kesimpulan
+  const summaryDiv = document.getElementById("summary");
+  const quickerAlgorithm =
+    quicksortHasil.waktu < mergesortHasil.waktu ? "QuickSort" : "MergeSort";
+  const difference = Math.abs(
+    quicksortHasil.waktu - mergesortHasil.waktu
+  ).toFixed(2);
+
+  summaryDiv.innerText = `
+    Algoritma yang lebih cepat adalah ${quickerAlgorithm} dengan selisih waktu ${difference} ms.
+    QuickSort memerlukan waktu ${quicksortHasil.waktu.toFixed(2)} ms, sedangkan MergeSort memerlukan waktu ${mergesortHasil.waktu.toFixed(2)} ms.
+  `;
 }
