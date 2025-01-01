@@ -3,37 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Perbandingan Algoritma Pengurutan Harga Minimarket</title>
+  <title>Perbandingan Algoritma Pengurutan</title>
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="overlay">
-    <div class="container">
-      <header>
-        <h1>Perbandingan Algoritma Pengurutan Harga Minimarket</h1>
-        <p>Masukkan data produk beserta harga (format: Nama Harga, Nama Harga):</p>
-      </header>
-
-      <!-- Input Data Produk -->
-      <textarea id="produkInput" placeholder="Roti 2000, Air Mineral 5000, Pensil 1000"></textarea>
-      <button onclick="prosesData()">Urutkan dan Lihat Grafik</button>
-
-      <!-- Grafik -->
-      <div id="chart-container">
-        <canvas id="chart"></canvas>
-      </div>
-
-      <!-- Kesimpulan -->
-      <div id="kesimpulan">
-        <h2>Kesimpulan</h2>
-        <p id="summary"></p>
+  <div class="container">
+    <div class="content">
+      <h1>Perbandingan Algoritma Pengurutan Harga Minimarket</h1>
+      <form id="dataForm">
+        <label for="dataInput">Masukkan data produk beserta harga (format: Nama Harga, Nama Harga):</label>
+        <textarea id="dataInput" placeholder="Roti 2000, Air Mineral 5000, Pensil 1000"></textarea>
+        <div class="button-container">
+          <button type="button" id="generateLargeInputBtn">Generate Large Input</button>
+          <button type="button" id="compareBtn">Urutkan dan Lihat Grafik</button>
+        </div>
+      </form>
+      <canvas id="chart" width="400" height="200"></canvas>
+      <div id="conclusion">
+        <h2>Kesimpulan:</h2>
+        <p id="quicksortConclusion"></p>
+        <p id="mergesortConclusion"></p>
       </div>
     </div>
   </div>
-  <footer>
-    <p>&copy; 2024 Analisis Algoritma</p>
-  </footer>
   <script src="script.js"></script>
 </body>
 </html>
